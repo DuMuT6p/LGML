@@ -1,0 +1,58 @@
+LGML - Linear Algebra / Graphics Math Library
+
+What is it? :
+Just some handy C++ headers for functionality I use a lot myself when messing around with
+computer graphics, computer games, artificial intelligence, procedural data generation and embedded development.
+I'm putting this out on GitHub in hope that it will become useful for others.
+Functionality that exist already:
+
+	fixedpoint: A fixedpoint type. The two template arguments is the underlying integer type to use, and the base to use.
+	In other words, it is the position of the conceptual fixed decimal point. The conversion between fixedpoint objects with different decimal
+	point positions (base) is handled automatically. So you can mix and match say, Q24.8 and Q31.1. Note that this class is properly made for
+	constants in mind. If you pass in constant parameters, it is close to guaranteed that the compiler will optimize away all the function calls.
+
+
+	fraction:	A fraction type. Stores numbers in a fraction-representation to avoid accuracy problems.
+	The template parameter must have integer-like behaviour, but must not necessarily be a built-in type.
+	+-*/% operators must be properly abstracted away before it will work on arbitrary precision types.
+
+	
+	linear-system-solver:	Solves a system of linear equations like:
+	a1X+b1Y+c1Z+.. = D1
+	a2X+b2Y+c2Z+.. = D2
+	a3X+b3Y+c3Z+.. = D2
+	..
+	aNX+bNY+cNZ+.. = DN	
+	where X,Y,Z .. are common unknowns, and a,b,c .. are coefficients.  I use this for Linear Programming. You can also consider each expression to be a hyperplane
+	in dimension N, where the intersection of N unique non-parallel hyperplanes in dimension N gives a single solution, I.E a point with N components. Free variables
+	give no solution (the function returns false). The template argument expects a floating-point type, or a type that behaves like floating-point.
+	The fraction type explained above can be used and is recommended, but int will cause problems due to integer-divides. The function uses gauss-elimination
+	to solve the unknowns. It takes a array of length N of N-dimensional vectors (it's a NxN matrix), and a vector that holds the values on the right side of the equation.
+	Both arguments are consumed. The altered matrix can be inspected in case of an error, and the vector holds the answer (the N unknowns) if the call succeeds.
+	
+
+	vector: classes for 2D and 3D vectors and points.
+		
+	
+
+Usage:
+The classes are fairly small and self-explanatory. Just include the header to use them.
+The classes that take template arguments are fairly general, and will work with any type that
+behave like integers, and sometimes floating-point. Again, read the header to learn more.
+If you have the Boost library installed, pass -DHAVE_BOOST to g++ when compiling to take advantage of BOOST_STATIC_ASSERT.
+Things are still a bit messy, as these headers were not made at the same time, or for the same purpose.
+So some things are a bit inconsistent, (coding style, variable names) but will improve.
+
+To-do: (from most important to least important)
+(*) Fix a heap of bugs in the initial commit, which I'm sure exist.
+(*) Improve the vector classes.
+(*) Add some rudimentary documentation.
+(*) Add parametric time intersection tests, and boolean intersection queries for boxes,
+convex polygons and circles.
+(*) Make the headers consistent in identation, coding style and naming.
+
+Contact:
+Want to help me out?
+mads@mechcore.net, or send me a message on GitHub.
+I'm also available on the FreeNode IRC network.
+
