@@ -37,7 +37,7 @@
 template<class T> struct Vector2
 {
   T x, y;
-  Vector2() : x(0), y(0){}
+  Vector2() : x(T(0.0f)), y(T(0.0f)){}
   Vector2(T a, T b) : x(a), y(b){}
   Vector2(const Vector2<T>& v) : x(v.x), y(v.y){}
 
@@ -109,8 +109,8 @@ template<class T> struct Vector2
   Vector2<T> unit() const
   {
     float mag = length();
-    if(std::abs(mag) < 0.000001f)
-      return Vector2<T>(0.0f, 0.0f);
+    if(std::abs(mag) < T(0.000001f))
+      return Vector2<T>(T(0.0f), T(0.0f));
     return *this / mag;
   }
   void normalize()
@@ -124,6 +124,15 @@ template<class T> struct Vector2
 		
     return len1 < len2;
   }
+
+  bool operator>(const Vector2<T>& v) const
+  {
+    T len1 = length();
+    T len2 = v.length();
+		
+    return len1 > len2;
+  }
+
 };
 
 #endif

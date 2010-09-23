@@ -28,10 +28,6 @@
 #ifndef FRACTION_H_GUARD
 #define FRACTION_H_GUARD
 //#include <boost/static_assert.h>
-#include "assert.h"
-#ifdef DEBUG
-#include <iostream>
-#endif
 
 /* Greatest common divisor */
 inline int gcd(int a, int b)
@@ -40,24 +36,23 @@ inline int gcd(int a, int b)
   int sign1,sign2;
   
   if(a < 0){
-	sign1 = -1;
-	a = -a;
+    sign1 = -1;
+    a = -a;
   } else {
-	sign1 = 1;
+    sign1 = 1;
   }
   
   if(b < 0){
-	sign2 = -1;
-	b = -b;
+    sign2 = -1;
+    b = -b;
   } else {
-	sign2 = 1;
+    sign2 = 1;
   }
   
-  ASSERT(b > 0);
   while(b){
-	c = b;
-	b = a%b;
-	a = c;
+    c = b;
+    b = a%b;
+    a = c;
   }
   return a*sign1*sign2;
 }
@@ -74,7 +69,7 @@ public:
   Fraction() : num(0), denom(1){}
   Fraction(T numerator, T denominator=T(1)) : num(numerator), denom(denominator)
   {
-	Simplify();
+    Simplify();
   }
 
   T Numerator() const { return num; }
@@ -83,153 +78,138 @@ public:
 
   bool IsFraction() const
   {
-	if(denom > 1)
-	  return true;
-	return false;
+    if(denom > 1)
+      return true;
+    return false;
   }
 
   Fraction<T> operator+(const Fraction<T>& right) const
   {
 	
-	T n1 = num;
-	T n2 = right.num;
-	T d1 = denom;
-	T d2 = right.denom;
+    T n1 = num;
+    T n2 = right.num;
+    T d1 = denom;
+    T d2 = right.denom;
 
-	T d3 = lcm(d1, d2);
-	T ma = d3 / d1;
-	T mb = d3 / d2;
+    T d3 = lcm(d1, d2);
+    T ma = d3 / d1;
+    T mb = d3 / d2;
 
-	return Fraction<T>(n1*ma + n2*mb, d3);
+    return Fraction<T>(n1*ma + n2*mb, d3);
   }
   Fraction<T> operator-(const Fraction<T>& right) const
   {
-	T n1 = num;
-	T n2 = right.num;
-	T d1 = denom;
-	T d2 = right.denom;
+    T n1 = num;
+    T n2 = right.num;
+    T d1 = denom;
+    T d2 = right.denom;
 
-	T d3 = lcm(d1, d2);
-	T ma = d3 / d1;
-	T mb = d3 / d2;
+    T d3 = lcm(d1, d2);
+    T ma = d3 / d1;
+    T mb = d3 / d2;
 
-	return Fraction<T>(n1*ma - n2*mb, d3);
+    return Fraction<T>(n1*ma - n2*mb, d3);
   }
   Fraction<T> operator*(const Fraction<T>& right) const
   {
-	T n1 = num;
-	T n2 = right.num;
-	T d1 = denom;
-	T d2 = right.denom;
+    T n1 = num;
+    T n2 = right.num;
+    T d1 = denom;
+    T d2 = right.denom;
 
-	return Fraction<T>(n1*n2,
-					   d1*d2);
+    return Fraction<T>(n1*n2,
+		       d1*d2);
   }
   Fraction<T> operator/(const Fraction<T>& right) const
   {
-	/* swap here */  
-	Fraction<T> tmp(right.Denominator(), right.Numerator());
+    /* swap here */  
+    Fraction<T> tmp(right.Denominator(), right.Numerator());
 
-	T n1 = num;
-	T d1 = denom;
+    T n1 = num;
+    T d1 = denom;
     T n2 = tmp.Numerator();
-	T d2 = tmp.Denominator();
+    T d2 = tmp.Denominator();
 	
-	return Fraction<T>(n1*n2,
-					   d1*d2);
+    return Fraction<T>(n1*n2,
+		       d1*d2);
   }
 
   Fraction<T>& operator+=(const Fraction<T>& right)
   {
-	*this = *this + right;
-	Simplify();
-	return *this;
+    *this = *this + right;
+    Simplify();
+    return *this;
   }
   Fraction<T>& operator-=(const Fraction<T>& right)
   {
-	*this = *this - right;
-	Simplify();
-	return *this;
+    *this = *this - right;
+    Simplify();
+    return *this;
   }
   Fraction<T>& operator*=(const Fraction<T>& right)
   {
-	*this = *this * right;
-	Simplify();
-	return *this;
+    *this = *this * right;
+    Simplify();
+    return *this;
   }
   Fraction<T>& operator/=(const Fraction<T>& right)
   {
-	*this = *this / right;
-	Simplify();
-	return *this;
+    *this = *this / right;
+    Simplify();
+    return *this;
   }
 
   bool operator==(const Fraction<T>& right) const
   {
-	if((num == right.num) && (denom == right.denom))
-	  return true;
-	return false;
+    if((num == right.num) && (denom == right.denom))
+      return true;
+    return false;
   }
   
   bool operator!=(const Fraction<T>& right) const
   {
-	if((num != right.num) || (denom != right.denom))
-	  return true;
-	return false;
+    if((num != right.num) || (denom != right.denom))
+      return true;
+    return false;
   }
   
 private:
   void Simplify()
   {
-	/* make sure that *zero* is represented as (0/1) */
-	if(denom == T(0)){
-	  num = T(0);
-	  denom = T(1);
-	}
-	else if(num == T(0)){
-	  denom = T(1);
-	}
+    /* make sure that *zero* is represented as (0/1) */
+    if(denom == T(0)){
+      num = T(0);
+      denom = T(1);
+    }
+    else if(num == T(0)){
+      denom = T(1);
+    }
 	
-	/* make sure negative denominators are fixed.
-	   (only numerators can be negative) */
-	if(denom < T(0)){
-	  num = -num;
-	  denom = -denom;
-	}
+    /* make sure negative denominators are fixed.
+       (only numerators can be negative) */
+    if(denom < T(0)){
+      num = -num;
+      denom = -denom;
+    }
 
-	/* make sure divi never becomes negative */
-	int sign;
-	if(num < 0){
-	  num = -num;
-	  sign = -1;
-	} else
-	  sign = 1;
+    /* make sure divi never becomes negative */
+    int sign;
+    if(num < 0){
+      num = -num;
+      sign = -1;
+    } else
+      sign = 1;
 	
-	/* convert to lowest terms by dividing with the gcd */
-	T divi = gcd(num, denom);
-	if(divi > 1){
-	  num /= divi;
-	  denom /= divi;
-	}
-	/* restore the initial sign */
-	num *= sign;
+    /* convert to lowest terms by dividing with the gcd */
+    T divi = gcd(num, denom);
+    if(divi > 1){
+      num /= divi;
+      denom /= divi;
+    }
+    /* restore the initial sign */
+    num *= sign;
 	
   }
 };
-
-
-#ifdef DEBUG
-template<class T>
-std::ostream& operator<<(std::ostream& strm, const Fraction<T>& fraction)
-{
-  T n = fraction.Numerator();
-  T d = fraction.Denominator();
-  if(d > 1)
-	strm << "(" << n << "/" << d << ")";
-  else
-	strm << n;
-  return strm;
-}
-#endif
 
 #endif
