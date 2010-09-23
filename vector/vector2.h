@@ -36,51 +36,94 @@
 
 template<class T> struct Vector2
 {
-	T x, y;
-	Vector2() : x(0), y(0){}
-	Vector2(T a, T b) : x(a), y(b){}
-	Vector2(const Vector2<T>& v) : x(v.x), y(v.y){}
-	Vector2 operator+(const Vector2<T>& v) const
-	{
-		return Vector2<T>(x+v.x, y+v.y);
-	}
-	Vector2<T> operator-(const Vector2<T>& v) const
-	{
-		return Vector2<T>(x-v.x, y-v.y);
-	}
-	T operator*(const Vector2<T>& v) const
-	{
-		return x*v.x + y*v.y;
-	}
-	Vector2<T> operator+(T s) const
-	{
-		return Vector2<T>(x+s, y+s);
-	}
-	Vector2<T> operator-(T s) const
-	{
-		return Vector2<T>(x-s, y-s);
-	}
-	Vector2<T> operator*(T s) const
-	{
-		return Vector2<T>(x*s, y*s);
-	}
-	Vector2<T> operator/(T s) const
-	{
-		return Vector2<T>(x/s, y/s);
-	}
+  T x, y;
+  Vector2() : x(0), y(0){}
+  Vector2(T a, T b) : x(a), y(b){}
+  Vector2(const Vector2<T>& v) : x(v.x), y(v.y){}
+
+  Vector2<T> operator+(const Vector2<T>& v) const
+  {
+    return Vector2<T>(x+v.x, y+v.y);
+  }
+  Vector2<T> operator-(const Vector2<T>& v) const
+  {
+    return Vector2<T>(x-v.x, y-v.y);
+  }
+  T operator*(const Vector2<T>& v) const
+  {
+    return x*v.x + y*v.y;
+  }
+  Vector2<T> operator+(T s) const
+  {
+    return Vector2<T>(x+s, y+s);
+  }
+  Vector2<T> operator-(T s) const
+  {
+    return Vector2<T>(x-s, y-s);
+  }
+  Vector2<T> operator*(T s) const
+  {
+    return Vector2<T>(x*s, y*s);
+  }
+  Vector2<T> operator/(T s) const
+  {
+    return Vector2<T>(x/s, y/s);
+  }
 	
-	T length() const
-	{
-		return std::sqrt(x*x + y*y);
-	}
+  Vector2<T>& operator+=(const Vector2<T>& v)
+  {
+    *this = *this + v;
+    return *this;
+  }
+  Vector2<T>& operator-=(const Vector2<T>& v)
+  {
+    *this = *this - v;
+    return *this;
+  }
+  Vector2<T>& operator+=(T s)
+  {
+    *this = *this + s;
+    return *this;
+  }
+  Vector2<T>& operator-=(T s)
+  {
+    *this = *this - s;
+    return *this;
+  }
+  Vector2<T> operator*=(T s)
+  {
+    *this = *this * s;
+    return *this;
+  }
+  Vector2<T> operator/=(T s)
+  {
+    *this = *this / s;
+    return *this;
+  }
+
+  T length() const
+  {
+    return std::sqrt(x*x + y*y);
+  }
 	
-	bool operator<(const Vector2<T>& v) const
-	{
-		T len1 = length();
-		T len2 = v.length();
+  Vector2<T> unit() const
+  {
+    float mag = length();
+    if(std::abs(mag) < 0.000001f)
+      return Vector2<T>(0.0f, 0.0f);
+    return *this / mag;
+  }
+  void normalize()
+  {
+    *this = unit();
+  }
+  bool operator<(const Vector2<T>& v) const
+  {
+    T len1 = length();
+    T len2 = v.length();
 		
-		return len1 < len2;
-	}
+    return len1 < len2;
+  }
 };
 
 #endif
