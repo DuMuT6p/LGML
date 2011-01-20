@@ -1,10 +1,5 @@
 #ifndef VECTOR3_H_GUARD
 #define VECTOR3_H_GUARD
-#ifdef WIN32
-#define _USE_MATH_DEFINES
-#else
-#define__USE_BSD
-#endif
 #include <cmath>
 
 
@@ -72,6 +67,12 @@ struct Vector3
   {
     *this = *this / v;
     return *this;
+  }
+
+  bool operator<(const Vector3<T> v)
+  {
+	/* Sorry, it's just a hack so we don't have to create a functor to std::sort */
+	return z > v.z;
   }
 
   T length() const

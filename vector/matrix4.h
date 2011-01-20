@@ -6,7 +6,7 @@
 template<class T> struct Matrix4
 {
   T m[16];
-  Matrix4(){ std::fill(m, m+16, T(0)); }
+  Matrix4(){ zero(); }
   Matrix4(const Vector4<T>& c1,
 	  const Vector4<T>& c2,
 	  const Vector4<T>& c3,
@@ -18,19 +18,35 @@ template<class T> struct Matrix4
     m[12] = c4.x; m[13] = c4.y; m[14] = c4.z; m[15] = c4.w;
   }
 
-  const T& operator[](size_t index) const
+  void zero()
+  {
+	std::fill(m, m+16, T(0));
+  }
+  void identity()
+  {
+    std::fill(m, m+16, T(0));
+    m[0] = m[5] = m[10] = m[15] = 1.0f;
+  }
+  T operator[](size_t index) const
   {
     return m[index];
   }
+
+  T& operator[](size_t index)
+  {
+      return m[index];
+  }
+
+  const T* c_ptr() const { return m; }
 
   Matrix4<T> operator*(const Matrix4<T>& mat) const
   {
     Matrix4<T> result;
     for(int i=0; i<4; ++i){
       for(int j=0; j<4; ++j){
-	for(int k=0; k<4; ++k){
-	  result[j+i*4] += m[k + i*4]*mat[j + k*4];
-	}
+		for(int k=0; k<4; ++k){
+			result[j+i*4] += m[k + i*4]*mat[j + k*4];
+		}
       }
     }
     return result;

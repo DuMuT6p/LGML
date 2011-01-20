@@ -27,11 +27,6 @@
 
 #ifndef VECTOR2_H_GUARD
 #define VECTOR2_H_GUARD
-#ifdef WIN32
-#define _USE_MATH_DEFINES
-#else
-#define__USE_BSD
-#endif
 #include <cmath>
 
 template<class T> struct Vector2
