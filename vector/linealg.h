@@ -1,3 +1,30 @@
+/*
+* Copyright (c) 2010, Mads Andreas Elvheim, mads@mechcore.net
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of the organization nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY Mads Andreas Elvheim ''AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL Mads Andreas Elvheim BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 #ifndef LINEALG_H_GUARD
 #define LINEALG_H_GUARD
 #include <cstdlib>
@@ -28,22 +55,6 @@ Vector4<T> operator*(const Matrix4<T>& mat, const Vector4<T>& v)
 		    v.x*mat[12] + v.y*mat[13] + v.z*mat[14] + v.w*mat[15]
 		    );
 }
-
-typedef Vector2<int> Vector2i;
-typedef Vector2<float> Vector2f;
-typedef Vector2<double> Vector2d;
-
-typedef Vector3<int> Vector3i;
-typedef Vector3<float> Vector3f;
-typedef Vector3<double> Vector3d;
-
-typedef Vector4<int> Vector4i;
-typedef Vector4<float> Vector4f;
-typedef Vector4<double> Vector4d;
-
-typedef Matrix4<int> Matrix4i;
-typedef Matrix4<float> Matrix4f;
-typedef Matrix4<double> Matrix4d;
 
 /* Misc functions */
 
@@ -193,16 +204,16 @@ inline Vector3f randv(const Vector3f& vmin, const Vector3f& vmax)
 
 inline Vector3f BezierCurve(const Vector3f& p1, const Vector3f& p2, const Vector3f& p3, const Vector3f& p4, float t)
 {
-   double mum1,mum13,mu3;
+   float mum1,mum13,mu3;
    Vector3f p;
 
    mum1 = 1.0f - t;
    mum13 = mum1 * mum1 * mum1;
    mu3 = t * t * t;
 
-   p.x = mum13*p1.x + 3*t*mum1*mum1*p2.x + 3*t*t*mum1*p3.x + mu3*p4.x;
-   p.y = mum13*p1.y + 3*t*mum1*mum1*p2.y + 3*t*t*mum1*p3.y + mu3*p4.y;
-   p.z = mum13*p1.z + 3*t*mum1*mum1*p2.z + 3*t*t*mum1*p3.z + mu3*p4.z;
+   p.x = mum13*p1.x + 3.0f*t*mum1*mum1*p2.x + 3.0f*t*t*mum1*p3.x + mu3*p4.x;
+   p.y = mum13*p1.y + 3.0f*t*mum1*mum1*p2.y + 3.0f*t*t*mum1*p3.y + mu3*p4.y;
+   p.z = mum13*p1.z + 3.0f*t*mum1*mum1*p2.z + 3.0f*t*t*mum1*p3.z + mu3*p4.z;
 
    return p;
 }
@@ -212,12 +223,12 @@ inline Vector3f BezierCurve(const std::vector<Vector3f>& p, double t)
 	int kn,nn,nkn;
 	double blend,muk,munk;
 	int count = p.size();
-	Vector3f b(0.0, 0.0, 0.0);
+	Vector3f b(0.0f, 0.0f, 0.0f);
 
 	muk = 1.0;
-	munk = std::pow(1.0f-t,(double)count);
+	munk = std::pow(1.0-t,(double)count);
 
-	for(unsigned int k=0;k<count;k++) {
+	for(unsigned int k=0;k<count;++k) {
 		nn = count;
 		kn = k;
 		nkn = count - k;
@@ -225,20 +236,21 @@ inline Vector3f BezierCurve(const std::vector<Vector3f>& p, double t)
 		muk *= t;
 		munk /= (1.0-t);
 		while (nn >= 1) {
-			blend *= (float)nn;
+			blend *= (double)nn;
 			--nn;
 			if(kn > 1) {
-				blend /= (float)kn;
+				blend /= (double)kn;
 				--kn;
 			}
 			if (nkn > 1) {
-				blend /= (float)nkn;
+				blend /= (double)nkn;
 				--nkn;
 			}
 		}
-		b.x += p[k].x * blend;
-		b.y += p[k].y * blend;
-		b.z += p[k].z * blend;
+		float blendf = static_cast<float>(blend);
+		b.x += p[k].x * blendf;
+		b.y += p[k].y * blendf;
+		b.z += p[k].z * blendf;
 	}
 	return b;
 }

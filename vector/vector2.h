@@ -130,4 +130,9 @@ T dot(const Vector2<T>& v1, const Vector2<T>& v2)
 {
   return v1.x*v2.x + v1.y*v2.y;
 }
+
+typedef Vector2<int> Vector2i;
+typedef Vector2<float> Vector2f;
+typedef Vector2<double> Vector2d;
+
 #endif
